@@ -1,0 +1,37 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: spring-security-lab
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/app_db
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: spring-client
+            client-secret: UMS7NbElhWX1aNTiuufEVCyEz9VYqijS
+            scope: openid, profile, email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/myrealm
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/myrealm
