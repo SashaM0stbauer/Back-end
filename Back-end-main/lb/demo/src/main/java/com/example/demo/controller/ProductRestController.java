@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
+import com.example.demo.annotation.CurrentUser;
+import com.example.demo.annotation.PostCreatedMapping;
 import com.example.demo.dto.ProductDto;
 import com.example.demo.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,13 +28,14 @@ public class ProductRestController {
         return ResponseEntity.ok(productService.getById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<ProductDto> create(@RequestBody ProductDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(dto));
+    @PostCreatedMapping
+    public ProductDto create(@Valid @RequestBody ProductDto dto, @CurrentUser String username) {
+        System.out.println("Product created by user: " + username);
+        return productService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> update(@PathVariable Long id, @RequestBody ProductDto dto) {
+    public ResponseEntity<ProductDto> update(@PathVariable Long id, @Valid @RequestBody ProductDto dto) {
         return ResponseEntity.ok(productService.update(id, dto));
     }
 
